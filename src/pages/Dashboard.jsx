@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
-import axiosClient from "../api/mockfast";
+import { getUsers } from "../services/UserService";
+
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    axiosClient
-      .get("/backend/apitemplate/get/IJYHL13MYF")
-      .then((res) => setData(res.data))
-      .catch((err) => console.error("Lỗi gọi API:", err));
-  }, []);
+ useEffect(() => {
+  getUsers()
+    .then((res) => setData(res))
+    .catch((err) => console.error("Lỗi gọi API:", err));
+}, []);
+
+  console.log("API URL:", process.env.REACT_APP_API_URL);
 
   return (
   <div className="min-h-screen bg-gray-100 p-6 flex flex-col justify-center items-center">
