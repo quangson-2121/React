@@ -1,9 +1,10 @@
-// src/api/mockfast.js
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "/backend/apitemplate/get/IJYHL13MYF", // link API của bạn
-  headers: { "Content-Type": "application/json" },
+  baseURL: process.env.REACT_APP_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default axiosClient;

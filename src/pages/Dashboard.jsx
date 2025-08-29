@@ -7,7 +7,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axiosClient
-      .get("")
+      .get("/backend/apitemplate/get/IJYHL13MYF")
       .then((res) => setData(res.data))
       .catch((err) => console.error("Lỗi gọi API:", err));
   }, []);
