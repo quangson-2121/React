@@ -1,26 +1,31 @@
-import React, { createContext, useState, useContext } from "react";
+// src/context/AuthContext.js
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [users, setUsers] = useState([]); // lưu tạm danh sách user
+  const [users, setUsers] = useState(() => {
+    const saved = localStorage.getItem("users");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [currentUser, setCurrentUser] = useState(null);
 
-  const register = (username, password) => {
-    // kiểm tra đã tồn tại chưa
-    const exists = users.find((u) => u.username === username);
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
+  }, [users]);
+
+  const register = (fullname, email, password) => {
+    const exists = users.find((u) => u.email === email);
     if (exists) {
       return { success: false, message: "Tên tài khoản đã tồn tại" };
     }
-    // thêm user mới vào danh sách
-    setUsers([...users, { username, password }]);
+    const newUser = { id: Date.now(), fullname, email, password };
+    setUsers([...users, newUser]);
     return { success: true, message: "Đăng ký thành công" };
   };
 
-  const login = (username, password) => {
-    const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
+  const login = (email, password) => {
+    const user = users.find((u) => u.email === email && u.password === password);
     if (user) {
       setCurrentUser(user);
       return { success: true, message: "Đăng nhập thành công" };
@@ -30,8 +35,16 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => setCurrentUser(null);
 
+  // 🆕 CRUD
+  const addUser = (user) => setUsers([...users, { ...user, id: Date.now() }]);
+  const updateUser = (id, updated) =>
+    setUsers(users.map((u) => (u.id === id ? { ...u, ...updated } : u)));
+  const deleteUser = (id) => setUsers(users.filter((u) => u.id !== id));
+
   return (
-    <AuthContext.Provider value={{ users, currentUser, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ users, currentUser, register, login, logout, addUser, updateUser, deleteUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

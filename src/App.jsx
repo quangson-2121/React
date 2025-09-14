@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
-import DataTable from "./components/DataTable";
+import MainLayout from "./layout/MainLayout";
+import UserManagementPage from "./pages/UserManagementPage";
 
 function App() {
   return (
@@ -12,8 +13,12 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/data-table" element={<DataTable />} />
+
+        <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path ="/users" element= {<UserManagementPage/>} />
+        </Route>
+
       </Routes>
     </Router>
   );

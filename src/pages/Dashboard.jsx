@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 import { getUsers } from "../services/UserService";
+import { Skeleton } from "antd";
 
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  const [loading , setLoading] = useState(true)
 
  useEffect(() => {
   getUsers()
     .then((res) => setData(res))
-    .catch((err) => console.error("Lỗi gọi API:", err));
+    .catch((err) => console.error("Lỗi gọi API:", err))
+    .finally(() => setLoading(false));
 }, []);
-
+  if (loading){
+       return <Skeleton active paragraph={{ rows: 4 }} />
+  }
   console.log("API URL:", process.env.REACT_APP_API_URL);
 
   return (
@@ -24,8 +29,6 @@ const Dashboard = () => {
     <DataTable apiData={data} />
   </div>
 </div>
-
-
   );
 };
 

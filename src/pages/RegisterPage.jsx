@@ -2,16 +2,22 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
 import "../components/AuthPage.css";
+import { useAuth } from "../context/AuthContext";
 
 function RegisterPage() {
   const navigate = useNavigate();
-
+  const { register } = useAuth(); 
   const handleRegister = async (values) => {
-    console.log("Register values:", values);
-    localStorage.setItem("user", JSON.stringify(values));
-    navigate("/login");
+  const { fullname ,email , password } = values ;
+  const result = register(fullname, email, password); // dùng context
+    if (result.success) {
+      alert("Đăng ký thành công!");
+      console.log(result);
+      navigate("/login");
+    } else {
+      alert(result.message);
+    }
   };
-
   return (
     <div className="auth-wrapper">
       <div className="auth-card">
