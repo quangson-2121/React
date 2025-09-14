@@ -6,18 +6,19 @@ import { useAuth } from "../context/AuthContext";
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const { register } = useAuth(); 
+  const { register } = useAuth();
+
   const handleRegister = async (values) => {
-  const { fullname ,email , password } = values ;
-  const result = register(fullname, email, password); // dùng context
+    const { fullname, email, password } = values;
+    const result = await register(fullname, email, password); // ✅ await
     if (result.success) {
       alert("Đăng ký thành công!");
-      console.log(result);
-      navigate("/login");
+      navigate("/login"); // sau đăng ký, vào luôn dashboard
     } else {
       alert(result.message);
     }
   };
+
   return (
     <div className="auth-wrapper">
       <div className="auth-card">

@@ -5,11 +5,8 @@ import "./DataTable.css"; // import CSS riêng
 function DataTable({ apiData }) {
   const columns = [
     { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Họ và Tên", dataIndex: "name", key: "name" },
+    { title: "Họ và Tên", dataIndex: "fullname", key: "fullname" },
     { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Tuổi", dataIndex: "age", key: "age", sorter: (a, b) => a.age - b.age },
-    { title: "Địa chỉ", dataIndex: "address", key: "address" },
-    { title: "Ngày sinh", dataIndex: "dob", key: "dob" },
   ];
 
   return (

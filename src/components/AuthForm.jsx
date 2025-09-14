@@ -4,14 +4,14 @@ import { Form, Input, Button } from "antd";
 function AuthForm({ type = "login", onSubmit }) {
   const [loading, setLoading] = useState(false);
 
-const handleFinish = async (values) => {
-  try {
-    setLoading(true);
-    await onSubmit(values); // chờ xong
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleFinish = async (values) => {
+    try {
+      setLoading(true);
+      await onSubmit(values); 
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-form w-full">
@@ -22,10 +22,7 @@ const handleFinish = async (values) => {
             name="fullname"
             rules={[{ required: true, message: "Nhập họ và tên" }]}
           >
-            <Input
-              placeholder="Họ và tên"
-              className="input-custom"
-            />
+            <Input placeholder="Họ và tên" className="input-custom" />
           </Form.Item>
         )}
 
@@ -37,10 +34,7 @@ const handleFinish = async (values) => {
             { type: "email", message: "Email không hợp lệ" },
           ]}
         >
-          <Input
-            placeholder="Email"
-            className="input-custom"
-          />
+          <Input placeholder="Email" className="input-custom" />
         </Form.Item>
 
         <Form.Item
@@ -48,10 +42,7 @@ const handleFinish = async (values) => {
           name="password"
           rules={[{ required: true, message: "Nhập mật khẩu" }]}
         >
-          <Input.Password
-            placeholder="Mật khẩu"
-            className="input-custom"
-          />
+          <Input.Password placeholder="Mật khẩu" className="input-custom" />
         </Form.Item>
 
         {type === "register" && (
@@ -71,20 +62,11 @@ const handleFinish = async (values) => {
               }),
             ]}
           >
-            <Input.Password
-              placeholder="Nhập lại mật khẩu"
-              className="input-custom"
-            />
+            <Input.Password placeholder="Nhập lại mật khẩu" className="input-custom" />
           </Form.Item>
         )}
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          block
-          loading={loading}
-          className="btn-submit"
-        >
+        <Button type="primary" htmlType="submit" block loading={loading} className="btn-submit">
           {type === "login" ? "Đăng nhập" : "Đăng ký"}
         </Button>
       </Form>

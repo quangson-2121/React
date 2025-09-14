@@ -5,19 +5,20 @@ import "../components/AuthPage.css";
 import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
-  const handleLogin = async (values) => {
-    const {email , password} = values; 
 
-    const result = login(email, password);
+  const handleLogin = async (values) => {
+    const { email, password } = values;
+    const result = await login(email, password); // ✅ await
     if (result.success) {
       alert("Đăng nhập thành công!");
-      naviagte("/dashboard");
-    } else {  
+      navigate("/dashboard");
+    } else {
       alert(result.message);
     }
   };
+
   return (
     <div className="auth-wrapper">
       <div className="auth-card">

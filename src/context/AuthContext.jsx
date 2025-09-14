@@ -1,50 +1,49 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useContext, useEffect } from "react";
+import * as UserService from "../services/UserService";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem("users");
-    return saved ? JSON.parse(saved) : [];
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem("currentUser");
+    return saved ? JSON.parse(saved) : null;
   });
-  const [currentUser, setCurrentUser] = useState(null);
 
+  // Lưu currentUser vào localStorage
   useEffect(() => {
-    localStorage.setItem("users", JSON.stringify(users));
-  }, [users]);
-
-  const register = (fullname, email, password) => {
-    const exists = users.find((u) => u.email === email);
-    if (exists) {
-      return { success: false, message: "Tên tài khoản đã tồn tại" };
+    if (currentUser) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem("currentUser");
     }
-    const newUser = { id: Date.now(), fullname, email, password };
-    setUsers([...users, newUser]);
+  }, [currentUser]);
+
+  // Đăng ký
+  const register = async (fullname, email, password) => {
+    const users = await UserService.getUsers();
+    if (users.find(u => u.email === email)) {
+      return { success: false, message: "Email đã tồn tại" };
+    }
+    const newUser = await UserService.addUser({ fullname, email, password });
+    setCurrentUser(newUser);
     return { success: true, message: "Đăng ký thành công" };
   };
 
-  const login = (email, password) => {
-    const user = users.find((u) => u.email === email && u.password === password);
+  // Đăng nhập
+  const login = async (email, password) => {
+    const users = await UserService.getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
     if (user) {
       setCurrentUser(user);
       return { success: true, message: "Đăng nhập thành công" };
     }
-    return { success: false, message: "Sai tài khoản hoặc mật khẩu" };
+    return { success: false, message: "Sai email hoặc mật khẩu" };
   };
 
   const logout = () => setCurrentUser(null);
 
-  // 🆕 CRUD
-  const addUser = (user) => setUsers([...users, { ...user, id: Date.now() }]);
-  const updateUser = (id, updated) =>
-    setUsers(users.map((u) => (u.id === id ? { ...u, ...updated } : u)));
-  const deleteUser = (id) => setUsers(users.filter((u) => u.id !== id));
-
   return (
-    <AuthContext.Provider
-      value={{ users, currentUser, register, login, logout, addUser, updateUser, deleteUser }}
-    >
+    <AuthContext.Provider value={{ currentUser, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
